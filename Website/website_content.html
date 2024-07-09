@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DataLila</title>
+<style>
+        table, th, td {
+            border:1px solid black;
+        }
+        .content{
+            max-width: 1200px;
+            margin: auto;
+        }
+        .carousel-inner {
+            height: 850px;
+            width: 1200px;
+        }
+        .item,
+        img {
+            height: 100% !important;
+            width: 100% !important;
+        }
+    </style>
+</head>
+<body>
+<h1 align="center" style="font-family:verdana">
+    DataLila
+</h1>
+<h2 align="center" style="font-family:verdana">
+    Uncover the stories your data can tell.
+</h2>
+<br>
+<h2 align="left" style="font-family:verdana">
+    Who We Are
+</h2>
+<p>
+    DataLila is a data analytics company that helps businesses make data-driven decisions based on their financial data. We present a solution to help you uncover the stories your data can tell. Our team of data scientists and financial analysts work together to provide you with the insights you need to make informed decisions about your business.
+</p>
+<br>
+<h2 align="left" style="font-family:verdana">
+    Product Overview
+</h2>
+<p>
+    An On Prem / Local solution that enables a natural language interface to your financial data.
+    Get completely reproducible, explainable results and visualizations in seconds.
+</p>
+<br>
+<h2 align="left" style="font-family:verdana">
+    Process
+</h2>
+<p>
+    1. Provide database schema and column metadata<br>
+    2. Connect our solution directly to your database<br>
+    3. Use the chatbot interface to ask questions about the data using your native language<br>
+    4. Our system will generate a written and visual answer to your question and will also provide a step-by-step explanation of the logic and code that was used to arrive at the answer
+</p>
+<br>
+<h2 align="left" style="font-family:verdana">
+    Example Use Case
+</h2>
+<h3 align="left" style="font-family:verdana">
+    Natural Language Query Input:
+</h3>
+<p>
+    “How was the performance at product level for the month of Sep'23 comparing the same with Budgets & Previous year?”
+</p><br>
+<h3 align="left" style="font-family:verdana">
+    Step 1: Parse and Interpret Query
+</h3>
+<p>
+- Identify Key Terms<br>
+&emsp;- ‘Performance’ <br>
+&emsp;&emsp;&emsp;- Based on knowledge of the database schema, key indicators for ‘Performance’ could include the following columns:<br>
+&emsp;&emsp;&emsp;&emsp;- Net Profit<br>
+&emsp;&emsp;&emsp;&emsp;- Gross Sales<br>
+&emsp;&emsp;&emsp;&emsp;- Net Revenue<br>
+&emsp;&emsp;&emsp;&emsp;- Volume (Only seen in the ‘Actual’ sheet)<br>
+&emsp;-‘Product-Level’ <br>
+&emsp;&emsp;- Comparisons performed in this calculation should be done after grouping the data based on each unique product <br>
+&emsp;- Month/Year <br>
+&emsp;&emsp;- Data should be filtered on the specified month and year <br>
+&emsp;- Identify suitable visualization <br>
+&emsp;&emsp;- Since the user is requesting a direct comparison of data from different time periods, generating grouped bar chart visualizations, one for Sep 2022 (Actual) and Sep 2023 (Actual) and one for Sep 2023 (Budget) and Sep 2023 (Actual) will best support the answer to the user’s query
+</p>
+<br>
+<h3 align="left" style="font-family:verdana">
+    Step 2: Perform Intermediate Calculations
+</h3>
+<p>
+&emsp;- Filter the ‘Budget’ and ‘Actual’ tables on year==2023 and month== 'Sep' then calculate the aggregate sum values for each ‘Performance’ metric and for each unique product. Record and display each result.<br>
+&emsp;- Filter the ‘Actual’ table on year==2022 and month=='Sep' then repeat the same aggregate sum calculations. Record and display the result.<br>
+&emsp;- Calculate the percentage change for 2022 (Actual) and 2023 (Actual) and present the resulting table to the user<br>
+&emsp;- Drop the ‘Volume’ column from the 2023 (Budget) and 2023 (Actual) aggregate tables and then perform the percentage change and present the resulting table to the user<br>
+</p>
+<br>
+<h3 align="left" style="font-family:verdana">
+    Step 3: Generate the Plot
+</h3>
+<p>
+&emsp;- Using the aggregate tables generated in Step 2, create two combined dataframes, one for each comparison<br>
+&emsp;- Set the index to be a MultiIndex using the Product Name and Performance Metric categories<br>
+&emsp;- Using Altair, plot a grouped bar chart for each of the two combined dataframes with the following encodings:<br>
+&emsp;&emsp;- X = Product<br>
+&emsp;&emsp;- xOffset = Time Period<br>
+&emsp;&emsp;- Y = Aggregate Value<br>
+&emsp;&emsp;- Color = Time Period<br>
+&emsp;&emsp;- Column = Metric<br>
+&emsp;- Generate plot
+</p>
+<br>
+<h3 align="left" style="font-family:verdana">
+    Results
+</h3>
+<p>
+    <b>Percentage change in performance metrics from Sep 2022 (Actual) to Sep 2023 (Actual)</b>
+</p>
+<table>
+    <tr>
+        <th>Product</th>
+        <th>Net Profit</th>
+        <th>Gross Sales</th>
+        <th>Net Revenue</th>
+        <th>Volume</th>
+    </tr>
+    <tr>
+        <td>Bliss</td>
+        <td>68.52%</td>
+        <td>47.19%</td>
+        <td>54.33%</td>
+        <td>30.23%</td>
+    </tr>
+    <tr>
+        <td>Cheddar Poppers</td>
+        <td>-18.99%</td>
+        <td>-8.25%</td>
+        <td>-10.75%</td>
+        <td>-19.76%</td>
+    </tr>
+    <tr>
+        <td>Citrus Splash</td>
+        <td>3.70%</td>
+        <td>4.36%</td>
+        <td>-17.30%</td>
+        <td>-1.8%</td>
+    </tr>
+    <tr>
+        <td>Lime Zest</td>
+        <td>2.39%</td>
+        <td>6.77%</td>
+        <td>1.86%</td>
+        <td>-2.36%</td>
+    </tr>
+    <tr>
+        <td>Munch Mix</td>
+        <td>38.93%</td>
+        <td>30.28%</td>
+        <td>46.07%</td>
+        <td>-4.13%</td>
+    </tr>
+    <tr>
+        <td>Nut Bar</td>
+        <td>44.82%</td>
+        <td>1.92%</td>
+        <td>28.75%</td>
+        <td>-5.16%</td>
+    </tr>
+    <tr>
+        <td>Seaside Bites</td>
+        <td>6.04%</td>
+        <td>12.27%</td>
+        <td>6.92%</td>
+        <td>-1.60%</td>
+    </tr>
+    <tr>
+        <td>Tango</td>
+        <td>30.56%</td>
+        <td>40.89%</td>
+        <td>18.66%</td>
+        <td>20.19%</td>
+    </tr>
+    <tr>
+        <td>Truffle</td>
+        <td>22.92%</td>
+        <td>28.15%</td>
+        <td>43.19%</td>
+        <td>11.43%</td>
+    </tr>
+</table><br>
+<p>
+    <b>Percentage change in performance metrics from Sep 2023 (Budget) to Sep 2023 (Actual)</b>
+</p>
+<table>
+    <tr>
+        <th>Product</th>
+        <th>Net Profit</th>
+        <th>Gross Sales</th>
+        <th>Net Revenue</th>
+        <th>Volume</th>
+    </tr>
+    <tr>
+        <td>Bliss</td>
+        <td>68.43%</td>
+        <td>32.61%</td>
+        <td>36.72%</td>
+        <td>N/A</td>
+    </tr>
+    <tr>
+        <td>Cheddar Poppers</td>
+        <td>6.51%</td>
+        <td>37.30%</td>
+        <td>44.66%</td>
+        <td>N/A</td>
+    </tr>
+    <tr>
+        <td>Citrus Splash</td>
+        <td>-6.04%</td>
+        <td>-15.31%</td>
+        <td>-28.26%</td>
+        <td>N/A</td>
+    </tr>
+    <tr>
+        <td>Lime Zest</td>
+        <td>-24.36%</td>
+        <td>-15.23%</td>
+        <td>-34.08%</td>
+        <td>N/A</td>
+    </tr>
+    <tr>
+        <td>Munch Mix</td>
+        <td>86.94%</td>
+        <td>53.55%</td>
+        <td>72.77%</td>
+        <td>N/A</td>
+    </tr>
+    <tr>
+        <td>Nut Bar</td>
+        <td>45.44%</td>
+        <td>27.08%</td>
+        <td>41.51%</td>
+        <td>N/A</td>
+    </tr>
+    <tr>
+        <td>Seaside Bites</td>
+        <td>17.07%</td>
+        <td>2.62%</td>
+        <td>0.77%</td>
+        <td>N/A</td>
+    </tr>
+    <tr>
+        <td>Tango</td>
+        <td>15.67%</td>
+        <td>-1.33%</td>
+        <td>-6.07%</td>
+        <td>N/A</td>
+    </tr>
+    <tr>
+        <td>Truffle</td>
+        <td>6.87%</td>
+        <td>0.91%</td>
+        <td>1.23%</td>
+        <td>N/A</td>
+    </tr>
+</table><br>
+<h3 align="left" style="font-family:verdana">
+    Answer & Visualizations
+</h3>
+<p>
+    <b>Comparison Sep 2023 (Budget) vs Sep 2023 (Actual)</b><br><br>
+    <img src="PC1/visualization.png" alt="Budget vs Actual 2023"><br><br>
+    Based on comparisons of Net Profit for each product category, it appears that all products exceeded budget expectations except for Citrus Splash and Lime Zest in September 2023.<br><br>
+
+    <b>Comparison Sep 2022 (Budget) vs Sep 2023 (Actual)</b><br><br>
+    <img src="PC1/visualization1.png" alt="Actual 2022 vs Actual 2023"><br><br>
+    Based on comparisons of Net Profit for each product category, it appears that all products improved their Net Profit for the company from 2022 to 2023, except for Cheddar Poppers which saw a 19% decrease in profits over that time period.<br><br>
+
+    <b>Both Comparisons</b><br><br>
+
+    Looking at both comparisons, it looks like the Bliss product showed a nearly 70% improvement when compared to both the actual performance in 2022 as well as the budgeted performance for 2023. Cheddar Poppers, Citrus Splash, and Lime Zest all showed either minimal increases in performance or significant decreases, suggesting that they are currently the worst performers in the month of September. Finally, Munch Mix and Nut Bar continue to remain strong performers.<br>
+
+</p>
+</body>
+</html>
