@@ -164,7 +164,26 @@
             left: 700px;
             top: 100px;
         }
+* {
+  box-sizing: border-box;
+}
 
+.column1 {
+  float: left;
+  width: 33.33%;
+  padding: 5px;
+}
+.column2 {
+  float: left;
+  width: 25.0%;
+  padding: 5px;
+}
+/* Clearfix (clear floats) */
+.row::after {
+  content: "";
+  clear: both;
+  display: table;
+}
         .section {
           display: none;
         }
@@ -280,14 +299,10 @@
     3. Use the chatbot interface to ask questions about the data using your native language<br>
     4. Our system will generate a written and visual answer to your question and will also provide a step-by-step explanation of the logic and code that was used to arrive at the answer
 </p>
-
-
-
       </div>
     </div>
 
     <div id="example-section" class="section">
-      <!--################### Max's Section #########################-->
       <div class='viz-description'>
         <h1 align="center" style="font-family:verdana">
           Example Use Case <br>
@@ -323,7 +338,7 @@
     Step 2: Perform Intermediate Calculations
 </h3>
 <p>
-&emsp;- Filter the ‘Budget’ and ‘Actual’ tables on year==2023 and month== 'Sep' then calculate the aggregate sum values for each ‘Performance’ metric and for each unique product. Record and display each result.<br>
+&emsp;- Filter the ‘Budget’ and ‘Actual’ tables on year==2023 and month=='Sep' then calculate the aggregate sum values for each ‘Performance’ metric and for each unique product. Record and display each result.<br>
 &emsp;- Filter the ‘Actual’ table on year==2022 and month=='Sep' then repeat the same aggregate sum calculations. Record and display the result.<br>
 &emsp;- Calculate the percentage change for 2022 (Actual) and 2023 (Actual) and present the resulting table to the user<br>
 &emsp;- Drop the ‘Volume’ column from the 2023 (Budget) and 2023 (Actual) aggregate tables and then perform the percentage change and present the resulting table to the user<br>
@@ -524,16 +539,41 @@
 </h3>
 <p>
     <b>Comparison Sep 2023 (Budget) vs Sep 2023 (Actual)</b><br><br>
-    <img src="PC1/visualization.png" alt="Budget vs Actual 2023"><br><br>
-    Based on comparisons of Net Profit for each product category, it appears that all products exceeded budget expectations except for Citrus Splash and Lime Zest in September 2023.<br><br>
+        <div class="row">
+  <div class="column1">
+    <img src="PC1/budget_actual/budget_actual_sales_2023.png" alt="Sales" style="height:400px">
+  </div>
+  <div class="column1">
+    <img src="PC1/budget_actual/budget_actual_profit_2023.png" alt="Profit" style="height:400px">
+  </div>
+  <div class="column1">
+    <img src="PC1/budget_actual/budget_actual_revenue_2023.png" alt="Revenue" style="height:400px">
+  </div>
+</div><br><br>
+    <!--<img src="PC1/visualization.png" alt="Budget vs Actual 2023"><br><br>-->
+    <p>Based on comparisons of Net Profit for each product category, it appears that all products exceeded budget expectations except for Citrus Splash and Lime Zest in September 2023.</p><br><br>
 
     <b>Comparison Sep 2022 (Budget) vs Sep 2023 (Actual)</b><br><br>
-    <img src="PC1/visualization1.png" alt="Actual 2022 vs Actual 2023"><br><br>
-    Based on comparisons of Net Profit for each product category, it appears that all products improved their Net Profit for the company from 2022 to 2023, except for Cheddar Poppers which saw a 19% decrease in profits over that time period.<br><br>
+   <!-- <img src="PC1/visualization1.png" alt="Actual 2022 vs Actual 2023"><br><br>-->
+          <div class="row">
+  <div class="column2">
+    <img src="PC1/actual_actual/actual_sales_2023_2022.png" alt="Sales" style="height:400px">
+  </div>
+  <div class="column2">
+    <img src="PC1/actual_actual/actual_profit_2023_2022.png" alt="Profit" style="height:400px">
+  </div>
+  <div class="column2">
+    <img src="PC1/actual_actual/actual_revenue_2023_2022.png" alt="Revenue" style="height:400px">
+  </div>
+              <div class="column2">
+    <img src="PC1/actual_actual/actual_volume_2023_2022.png" alt="Volume" style="height:400px">
+  </div>
+</div><br><br>
+    <p>Based on comparisons of Net Profit for each product category, it appears that all products improved their Net Profit for the company from 2022 to 2023, except for Cheddar Poppers which saw a 19% decrease in profits over that time period.</p><br><br>
 
     <b>Both Comparisons</b><br><br>
 
-    Looking at both comparisons, it looks like the Bliss product showed a nearly 70% improvement when compared to both the actual performance in 2022 and the budgeted performance for 2023. Cheddar Poppers, Citrus Splash, and Lime Zest all showed either minimal increases in performance or significant decreases, suggesting that they are currently the worst performers in the month of September. Finally, Munch Mix and Nut Bar continue to be strong performers.<br>
+    <p>Looking at both comparisons, it looks like the Bliss product showed a nearly 70% improvement when compared to both the actual performance in 2022 and the budgeted performance for 2023. Cheddar Poppers, Citrus Splash, and Lime Zest all showed either minimal increases in performance or significant decreases, suggesting that they are currently the worst performers in the month of September. Finally, Munch Mix and Nut Bar continue to be strong performers.<br>
 
 </p>
     </div>
