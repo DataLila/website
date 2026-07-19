@@ -1,0 +1,267 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Datalila Business Rule Engine (BRE) API",
+    "description": "High-performance DMN and FEEL decision execution engine REST API.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Local Development Server"
+    }
+  ],
+  "paths": {
+    "/api/v1/auth/register": {
+      "post": {
+        "summary": "Register a new user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["username", "email", "password"],
+                "properties": {
+                  "username": { "type": "string" },
+                  "email": { "type": "string", "format": "email" },
+                  "password": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "User registered successfully" },
+          "400": { "description": "Bad Request" }
+        }
+      }
+    },
+    "/api/v1/auth/login": {
+      "post": {
+        "summary": "Log in and get JWT token",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["username", "password"],
+                "properties": {
+                  "username": { "type": "string" },
+                  "password": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Authentication successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "description": "Unauthorized" }
+        }
+      }
+    },
+    "/api/v1/rulesets/register": {
+      "post": {
+        "summary": "Register a compiled ruleset",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["ruleset_name", "format", "ruleset_content"],
+                "properties": {
+                  "ruleset_name": { "type": "string" },
+                  "format": { "type": "string", "enum": ["dmn-xml", "json-table", "feel-expression"] },
+                  "ruleset_content": { "type": "string", "description": "Stringified JSON or DMN XML string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ruleset registered",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "definition_hash": { "type": "string" },
+                    "version": { "type": "integer" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/rulesets/evaluate": {
+      "post": {
+        "summary": "Evaluate registered ruleset",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["definition_hash", "input_payload_json"],
+                "properties": {
+                  "definition_hash": { "type": "string" },
+                  "input_payload_json": { "type": "object" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Evaluation result output payload",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/decide": {
+      "post": {
+        "summary": "Evaluate ad-hoc ruleset (compile and run inline)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["format", "ruleset_content", "input_payload_json"],
+                "properties": {
+                  "format": { "type": "string", "enum": ["dmn-xml", "json-table"] },
+                  "ruleset_content": { "type": "string" },
+                  "input_payload_json": { "type": "object" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Evaluation result" }
+        }
+      }
+    },
+    "/api/v1/rulesets": {
+      "get": {
+        "summary": "List all active registered rulesets",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": { "type": "string" },
+                      "version": { "type": "integer" },
+                      "definition_hash": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/rulesets/{name}": {
+      "delete": {
+        "summary": "Soft-delete all versions of a ruleset",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Soft-delete complete" }
+        }
+      }
+    },
+    "/api/v1/rulesets/{name}/versions/{version}": {
+      "delete": {
+        "summary": "Soft-delete specific ruleset version",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Version soft-deleted" }
+        }
+      }
+    },
+    "/api/v1/rulesets/{name}/hitmap": {
+      "get": {
+        "summary": "Get ruleset execution hitmap statistics",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/analytics/metrics": {
+      "get": {
+        "summary": "Exposes prometheus execution metrics",
+        "responses": {
+          "200": { "description": "Metrics exported" }
+        }
+      }
+    }
+  }
+}
